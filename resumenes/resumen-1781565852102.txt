@@ -1,0 +1,9 @@
+RESUMEN DE INSCRIPCION
+======================
+Estudiante: Felipe Cabrera
+
+Cursos inscritos:
+- Spring Boot | Instructor: Felipe Cabrera | Duracion: 40 horas | Costo: $79990.0
+- AWS Cloud | Instructor: Maria Lopez | Duracion: 30 horas | Costo: $89990.0
+
+Total a pagar: $169980.0

@@ -5,6 +5,9 @@ import com.duoc.plataforma_cursos_duoc.model.InscripcionRequest;
 import com.duoc.plataforma_cursos_duoc.model.InscripcionResumen;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +34,48 @@ public class InscripcionController {
             }
         }
 
-        return new InscripcionResumen(
+        InscripcionResumen resumen = new InscripcionResumen(
                 request.getEstudiante(),
                 cursosSeleccionados,
                 total
         );
+
+        generarArchivoResumen(resumen);
+
+        return resumen;
+    }
+
+    private void generarArchivoResumen(InscripcionResumen resumen) {
+        try {
+            File carpeta = new File("resumenes");
+
+            if (!carpeta.exists()) {
+                carpeta.mkdir();
+            }
+
+            String nombreArchivo = "resumen-" + System.currentTimeMillis() + ".txt";
+            File archivo = new File(carpeta, nombreArchivo);
+
+            FileWriter writer = new FileWriter(archivo);
+
+            writer.write("RESUMEN DE INSCRIPCION\n");
+            writer.write("======================\n");
+            writer.write("Estudiante: " + resumen.getEstudiante() + "\n\n");
+            writer.write("Cursos inscritos:\n");
+
+            for (Curso curso : resumen.getCursosSeleccionados()) {
+                writer.write("- " + curso.getNombre()
+                        + " | Instructor: " + curso.getInstructor()
+                        + " | Duracion: " + curso.getDuracion()
+                        + " horas | Costo: $" + curso.getCosto() + "\n");
+            }
+
+            writer.write("\nTotal a pagar: $" + resumen.getTotalPagar());
+
+            writer.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error al generar archivo de resumen", e);
+        }
     }
 }
