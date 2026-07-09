@@ -26,6 +26,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/inscripciones").permitAll() //temporalmente permitir inscripciones sin autenticación
 
                 // Cualquier usuario autenticado puede consultar cursos
                 .requestMatchers(HttpMethod.GET, "/api/cursos").authenticated()

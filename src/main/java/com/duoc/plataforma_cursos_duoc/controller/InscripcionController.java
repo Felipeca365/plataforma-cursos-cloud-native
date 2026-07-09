@@ -1,5 +1,7 @@
 package com.duoc.plataforma_cursos_duoc.controller;
 
+import com.duoc.plataforma_cursos_duoc.service.ProductorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.duoc.plataforma_cursos_duoc.model.Curso;
 import com.duoc.plataforma_cursos_duoc.model.InscripcionRequest;
 import com.duoc.plataforma_cursos_duoc.model.InscripcionResumen;
@@ -13,6 +15,9 @@ import java.util.List;
 
 @RestController
 public class InscripcionController {
+
+    @Autowired
+    private ProductorService productorService;
 
     @PostMapping("/api/inscripciones")
     public InscripcionResumen inscribirEstudiante(@RequestBody InscripcionRequest request) {
@@ -41,6 +46,7 @@ public class InscripcionController {
         );
 
         generarArchivoResumen(resumen);
+        productorService.enviarResumen(resumen);
 
         return resumen;
     }

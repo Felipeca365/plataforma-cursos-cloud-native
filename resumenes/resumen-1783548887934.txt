@@ -1,0 +1,9 @@
+RESUMEN DE INSCRIPCION
+======================
+Estudiante: Felipe Cabrera
+
+Cursos inscritos:
+- Spring Boot | Instructor: Felipe Cabrera | Duracion: 40 horas | Costo: $79990.0
+- Docker | Instructor: Juan Perez | Duracion: 20 horas | Costo: $59990.0
+
+Total a pagar: $139980.0
