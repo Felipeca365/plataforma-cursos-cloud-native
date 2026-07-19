@@ -1,0 +1,8 @@
+RESUMEN DE INSCRIPCION
+======================
+Estudiante: Prueba Felipe
+
+Cursos inscritos:
+- Spring Boot | Instructor: Felipe Cabrera | Duracion: 40 horas | Costo: $79990.0
+
+Total a pagar: $79990.0

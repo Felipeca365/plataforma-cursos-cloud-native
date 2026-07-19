@@ -26,7 +26,7 @@
          pero comparten la misma version de Spring Boot definida arriba -->
     <modules>
         <module>ms-cursos</module>
-        <!-- <module>ms-inscripciones</module> -->
+        <module>ms-inscripciones</module>
     	<!-- <module>ms-storage</module> -->
     	<!-- <module>bff</module> -->
     </modules>
