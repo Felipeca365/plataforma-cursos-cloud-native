@@ -28,7 +28,7 @@
         <module>ms-cursos</module>
         <module>ms-inscripciones</module>
     	<module>ms-storage</module>
-    	<!-- <module>bff</module> -->
+    	<module>bff</module>
     </modules>
 
 </project>
