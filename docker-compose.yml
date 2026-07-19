@@ -1,0 +1,52 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: unless-stopped
+
+  ms-cursos:
+    build:
+      context: ./ms-cursos
+    env_file:
+      - .env
+    ports:
+      - "8081:8081"
+    depends_on:
+      - rabbitmq
+    restart: unless-stopped
+
+  ms-inscripciones:
+    build:
+      context: ./ms-inscripciones
+    env_file:
+      - .env
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq
+    restart: unless-stopped
+
+  ms-storage:
+    build:
+      context: ./ms-storage
+    env_file:
+      - .env
+    ports:
+      - "8083:8083"
+    restart: unless-stopped
+
+  bff:
+    build:
+      context: ./bff
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ms-cursos
+      - ms-inscripciones
+      - ms-storage
+      - rabbitmq
+    restart: unless-stopped
