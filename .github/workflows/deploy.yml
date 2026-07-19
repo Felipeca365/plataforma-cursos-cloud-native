@@ -1,39 +1,41 @@
 name: Deploy a AWS EC2
-
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch: {}
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
-
       - name: Configurar JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: maven
-
       - name: Compilar los 4 microservicios (sin tests, sin construir aun las imagenes)
         run: ./mvnw -B package -DskipTests
-
-      - name: Copiar codigo y jars compilados a la EC2
+      - name: Generar archivo .env localmente
+        run: |
+          cat > .env << EOF
+          ORACLE_DB_PASSWORD=${{ secrets.ORACLE_DB_PASSWORD }}
+          AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_S3_BUCKET=felipe-cdy2204-inscripciones-2026
+          EOF
+      - name: Copiar codigo, jars y .env a la EC2
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "ms-cursos/Dockerfile,ms-cursos/target/ms-cursos.jar,ms-inscripciones/Dockerfile,ms-inscripciones/target/ms-inscripciones.jar,ms-storage/Dockerfile,ms-storage/target/ms-storage.jar,bff/Dockerfile,bff/target/bff.jar,docker-compose.yml"
+          source: "ms-cursos/Dockerfile,ms-cursos/target/ms-cursos.jar,ms-inscripciones/Dockerfile,ms-inscripciones/target/ms-inscripciones.jar,ms-storage/Dockerfile,ms-storage/target/ms-storage.jar,bff/Dockerfile,bff/target/bff.jar,docker-compose.yml,.env"
           target: "/home/${{ secrets.EC2_USER }}/plataforma-cursos-duoc"
           strip_components: 0
-
-      - name: Escribir el .env con los secretos y reiniciar los contenedores
+      - name: Reiniciar los contenedores
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -45,12 +47,5 @@ jobs:
           command_timeout: 10m
           script: |
             cd /home/${{ secrets.EC2_USER }}/plataforma-cursos-duoc
-            rm -f .env
-            echo "ORACLE_DB_PASSWORD=${{ secrets.ORACLE_DB_PASSWORD }}" >> .env
-            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
-            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
-            echo "AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}" >> .env
-            echo "AWS_S3_BUCKET=felipe-cdy2204-inscripciones-2026" >> .env
             docker compose up -d --build
             docker compose ps
-
