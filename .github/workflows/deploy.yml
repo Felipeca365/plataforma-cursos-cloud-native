@@ -39,6 +39,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          debug: true
           script: |
             cd /home/${{ secrets.EC2_USER }}/plataforma-cursos-duoc
 
@@ -52,3 +54,4 @@ jobs:
 
             docker compose up -d --build
             docker compose ps
+
