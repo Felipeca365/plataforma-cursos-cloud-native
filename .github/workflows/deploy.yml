@@ -44,6 +44,13 @@ jobs:
           timeout: 60s
           command_timeout: 10m
           script: |
-           whoami
-           docker --version
+            cd /home/${{ secrets.EC2_USER }}/plataforma-cursos-duoc
+            rm -f .env
+            echo "ORACLE_DB_PASSWORD=${{ secrets.ORACLE_DB_PASSWORD }}" >> .env
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+            echo "AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}" >> .env
+            echo "AWS_S3_BUCKET=felipe-cdy2204-inscripciones-2026" >> .env
+            docker compose up -d --build
+            docker compose ps
 
