@@ -44,6 +44,9 @@ services:
       - .env
     environment:
       - RABBITMQ_HOST=rabbitmq
+      - MS_CURSOS_URL=http://ms-cursos:8081
+      - MS_INSCRIPCIONES_URL=http://ms-inscripciones:8082
+      - MS_STORAGE_URL=http://ms-storage:8083
     ports:
       - "8080:8080"
     depends_on:
